@@ -1,0 +1,58 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "My first simple job template",
+    "originalLanguage": "en"
+  },
+  "generalInformation": {
+    "catalogName": "ZTEST_MY_SIMPLE_JOB"
+  },
+  "parameters": {
+    "singleValueParameters": [
+      {
+        "name": "P_CHECK",
+        "value": "X"
+      },
+      {
+        "name": "P_DATE",
+        "value": "20250205"
+      },
+      {
+        "name": "P_DESCR",
+        "value": "My Default Description"
+      },
+      {
+        "name": "P_HIDDEN",
+        "value": "Very long text"
+      },
+      {
+        "name": "P_INT",
+        "value": "200"
+      },
+      {
+        "name": "P_RB_1",
+        "value": "X"
+      },
+      {
+        "name": "P_RB_2",
+        "value": ""
+      },
+      {
+        "name": "P_TIME",
+        "value": "212300"
+      }
+    ],
+    "valueRangesParameters": [
+      {
+        "name": "S_ID",
+        "valueRanges": [
+          {
+            "sign": "include",
+            "option": "equals",
+            "low": "1400"
+          }
+        ]
+      }
+    ]
+  }
+}

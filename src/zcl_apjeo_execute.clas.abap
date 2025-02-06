@@ -12,34 +12,99 @@ ENDCLASS.
 
 
 CLASS zcl_apjeo_execute IMPLEMENTATION.
-METHOD if_apj_dt_exec_object~get_parameters.
+  METHOD if_apj_dt_exec_object~get_parameters.
+    BREAK-POINT ID zapjeo_all_exit_methods.
 
     " Return the supported selection parameters here
-    et_parameter_def = VALUE #(
-      ( selname = 'S_ID'    kind = if_apj_dt_exec_object=>select_option datatype = 'C' length = 10 param_text = 'My ID'                                      changeable_ind = abap_true )
-      ( selname = 'P_DESCR' kind = if_apj_dt_exec_object=>parameter     datatype = 'C' length = 80 param_text = 'My Description'   lowercase_ind = abap_true changeable_ind = abap_true )
-      ( selname = 'P_COUNT' kind = if_apj_dt_exec_object=>parameter     datatype = 'I' length = 10 param_text = 'My Count'                                   changeable_ind = abap_true )
-      ( selname = 'P_SIMUL' kind = if_apj_dt_exec_object=>parameter     datatype = 'C' length =  1 param_text = 'My Simulate Only' checkbox_ind = abap_true  changeable_ind = abap_true )
-    ).
+    et_parameter_def = VALUE #( ( selname         = 'S_ID'
+                                  kind            = if_apj_dt_exec_object=>select_option
+                                  datatype        = 'C'
+                                  length          = 10
+                                  param_text      = 'My ID'
+                                  changeable_ind  = abap_true )
+                                ( selname         = 'P_DESCR'
+                                  kind            = if_apj_dt_exec_object=>parameter
+                                  datatype        = 'C'
+                                  length          = 80
+                                  param_text      = 'My Description 2'
+                                  lowercase_ind   = abap_true
+                                  changeable_ind  = abap_true )
+                                ( selname         = 'P_DATE'
+                                  kind            = if_apj_dt_exec_object=>parameter
+                                  datatype        = 'D'
+                                  param_text      = 'My Date'
+                                  lowercase_ind   = abap_true
+                                  changeable_ind  = abap_true )
+                                ( selname         = 'P_TIME'
+                                  kind            = if_apj_dt_exec_object=>parameter
+                                  datatype        = 'T'
+                                  param_text      = 'My Time'
+                                  changeable_ind  = abap_true )
+                                ( selname         = 'P_INT'
+                                  kind            = if_apj_dt_exec_object=>parameter
+                                  datatype        = 'I'
+                                  param_text      = 'My Integer'
+                                  changeable_ind  = abap_true )
+                                ( selname         = 'P_CHECK'
+                                  kind            = if_apj_dt_exec_object=>parameter
+                                  datatype        = 'C'
+                                  length          = 1
+                                  param_text      = 'Checkbox'
+                                  group_text      = 'Group'   " Ignored in Private Cloud and On-Premises systems
+                                  section_text    = 'Section' " Ignored in Private Cloud and On-Premises systems
+                                  checkbox_ind    = abap_true
+                                  changeable_ind  = abap_true )
+                                ( selname         = 'P_FIXED'
+                                  kind            = if_apj_dt_exec_object=>parameter
+                                  datatype        = 'C'
+                                  length          = 1
+                                  param_text      = 'Not changeable'
+                                  changeable_ind  = abap_false )
+                                ( selname         = 'P_RB_1'
+                                  kind            = if_apj_dt_exec_object=>parameter
+                                  param_text      = 'Option 1'
+                                  datatype        = 'C'
+                                  length          = 1
+                                  radio_group_ind = abap_true
+                                  radio_group_id  = 'RBG1'
+                                  changeable_ind  = abap_true )
+                                ( selname         = 'P_RB_2'
+                                  kind            = if_apj_dt_exec_object=>parameter
+                                  param_text      = 'Option 2'
+                                  datatype        = 'C'
+                                  length          = 1
+                                  radio_group_ind = abap_true
+                                  radio_group_id  = 'RBG1'
+                                  changeable_ind  = abap_true )
+                                ( selname         = 'P_HIDDEN'
+                                  kind            = if_apj_dt_exec_object=>parameter
+                                  datatype        = 'g'
+                                  param_text      = 'Hidden'
+                                  hidden_ind      = abap_true ) ).
 
     " Return the default parameters values here
-    et_parameter_val = VALUE #(
-      ( selname = 'S_ID'    kind = if_apj_dt_exec_object=>select_option sign = 'I' option = 'EQ' low = '4711' )
-      ( selname = 'P_DESCR' kind = if_apj_dt_exec_object=>parameter     sign = 'I' option = 'EQ' low = 'My Default Description' )
-      ( selname = 'P_COUNT' kind = if_apj_dt_exec_object=>parameter     sign = 'I' option = 'EQ' low = '200' )
-      ( selname = 'P_SIMUL' kind = if_apj_dt_exec_object=>parameter     sign = 'I' option = 'EQ' low = abap_true )
-    ).
-
+    et_parameter_val = VALUE #( sign   = 'I'
+                                option = 'EQ'
+                                ( selname = 'S_ID'     kind = if_apj_dt_exec_object=>select_option low = '4711' )
+                                ( selname = 'P_DESCR'  kind = if_apj_dt_exec_object=>parameter     low = 'My Default Description' )
+                                ( selname = 'P_INT'    kind = if_apj_dt_exec_object=>parameter     low = '200' )
+                                ( selname = 'P_DATE'   kind = if_apj_dt_exec_object=>parameter     low = '20250205' )
+                                ( selname = 'P_TIME'   kind = if_apj_dt_exec_object=>parameter     low = '212300' )
+                                ( selname = 'P_CHECK'  kind = if_apj_dt_exec_object=>parameter     low = abap_true )
+                                ( selname = 'P_RB_1'   kind = if_apj_dt_exec_object=>parameter     low = abap_true )
+                                ( selname = 'P_RB_2'   kind = if_apj_dt_exec_object=>parameter     low = abap_false )
+                                ( selname = 'P_HIDDEN' kind = if_apj_dt_exec_object=>parameter     low = 'Very long text' ) ).
   ENDMETHOD.
 
   METHOD if_apj_rt_exec_object~execute.
-
     TYPES ty_id TYPE c LENGTH 10.
 
-    DATA s_id    TYPE RANGE OF ty_id.
-    DATA p_descr TYPE c LENGTH 80.
-    DATA p_count TYPE i.
-    DATA p_simul TYPE abap_boolean.
+    DATA s_id    TYPE RANGE OF ty_id ##NEEDED.
+    DATA p_descr TYPE c LENGTH 80 ##NEEDED.
+    DATA p_count TYPE i ##NEEDED.
+    DATA p_simul TYPE abap_boolean ##NEEDED.
+
+    BREAK-POINT ID zapjeo_all_exit_methods.
 
     " Getting the actual parameter values
     LOOP AT it_parameters INTO DATA(ls_parameter).
@@ -56,6 +121,9 @@ METHOD if_apj_dt_exec_object~get_parameters.
     ENDLOOP.
 
     " Implement the job execution
-
+*    IF sy-datum = '20250206'.
+*      DO.
+*      ENDDO.
+*    ENDIF.
   ENDMETHOD.
 ENDCLASS.

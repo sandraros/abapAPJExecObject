@@ -35,15 +35,15 @@ CLASS zcl_apjeo_rt_api IMPLEMENTATION.
 
     "  the immediate start can't be used when being called from within a RAP business object
     "  because the underlying API performs an implicit COMMIT WORK.
-    " ls_start_info-start_immediately = 'X'.
+    ls_start_info-start_immediately = 'X'.
 
-    " Start the job using a timestamp instead. This will start the job immediately but can have a delay depending on the current workload.
-    GET TIME STAMP FIELD DATA(ls_ts1).
-    " add 1 hour
-    DATA(ls_ts2) = cl_abap_tstmp=>add( tstmp = ls_ts1
-                                       secs  = 3600 ).
-
-    ls_start_info-timestamp = ls_ts2.
+*    " Start the job using a timestamp instead. This will start the job immediately but can have a delay depending on the current workload.
+*    GET TIME STAMP FIELD DATA(ls_ts1).
+*    " add 1 hour
+*    DATA(ls_ts2) = cl_abap_tstmp=>add( tstmp = ls_ts1
+*                                       secs  = 3600 ).
+*
+*    ls_start_info-timestamp = ls_ts2.
 
     " periodicity ------------------------------
 
@@ -60,46 +60,12 @@ CLASS zcl_apjeo_rt_api IMPLEMENTATION.
     " which are stored in the template
     " the field names in this program must match the field names of the template
 
-    ls_job_parameters-name = 'P_TEST1'.
-
-    ls_value-sign   = 'I'.
-    ls_value-option = 'EQ'.
-    ls_value-low    = 'Blabla 1'.
-    APPEND ls_value TO ls_job_parameters-t_value.
-
-    APPEND ls_job_parameters TO lt_job_parameters.
-    CLEAR ls_job_parameters.
-    " +++++++++++++++++++++++++
-
-    ls_job_parameters-name = 'P_TEST2'.
-
-    ls_value-sign   = 'I'.
-    ls_value-option = 'BT'.
-    ls_value-low    = 'ATEST'.
-    ls_value-high   = 'ZTEST'.
-    APPEND ls_value TO ls_job_parameters-t_value.
-
-    ls_job_parameters-name = 'P_TEST2'.
-
-    ls_value-sign   = 'I'.
-    ls_value-option = 'BT'.
-    ls_value-low    = '11111'.
-    ls_value-high   = '99999'.
-    APPEND ls_value TO ls_job_parameters-t_value.
-
-    APPEND ls_job_parameters TO lt_job_parameters.
-    CLEAR ls_job_parameters.
-    " +++++++++++++++++++++++++
-
-    ls_job_parameters-name = 'P_TEST3'.
-
-    ls_value-sign   = 'I'.
-    ls_value-option = 'EQ'.
-    ls_value-low    = '220'.
-    APPEND ls_value TO ls_job_parameters-t_value.
-
-    APPEND ls_job_parameters TO lt_job_parameters.
-    CLEAR ls_job_parameters.
+    lt_job_parameters = VALUE #( ( name    = 'S_ID'
+                                   t_value = VALUE #( ( sign = 'I' option = 'EQ' low = '1555' ) ) )
+                                 ( name    = 'P_RB_1'
+                                   t_value = VALUE #( ( sign = 'I' option = 'EQ' low = 'X' ) ) )
+                                 ( name    = 'P_RB_2'
+                                   t_value = VALUE #( ( sign = 'I' option = 'EQ' low = ' ' ) ) ) ).
 
     " ----------------------------------------------------
 
@@ -145,14 +111,14 @@ CLASS zcl_apjeo_rt_api IMPLEMENTATION.
         out->write( lv_status ).
         out->write( lv_statustext ).
 
-        " via the following method you can cancel the job
-        " in the application job context 'cancel' means (as in the Fiori app):
-        " 1. if the job is running, it will be canceled
-        " 2. if the job has not yet started, it will be deleted.
-        " In case the job is periodic, the whole periodicity chain is deleted.
-
-        cl_apj_rt_api=>cancel_job( iv_jobname  = lv_jobname
-                                   iv_jobcount = lv_jobcount ).
+*        " via the following method you can cancel the job
+*        " in the application job context 'cancel' means (as in the Fiori app):
+*        " 1. if the job is running, it will be canceled
+*        " 2. if the job has not yet started, it will be deleted.
+*        " In case the job is periodic, the whole periodicity chain is deleted.
+*
+*        cl_apj_rt_api=>cancel_job( iv_jobname  = lv_jobname
+*                                   iv_jobcount = lv_jobcount ).
       CATCH cx_apj_rt INTO DATA(exc).
         lv_txt = exc->get_longtext( ).
         ls_ret = exc->get_bapiret2( ).

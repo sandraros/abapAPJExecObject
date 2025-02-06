@@ -13,13 +13,16 @@ ENDCLASS.
 CLASS zcl_apjeo_dt_create_content IMPLEMENTATION.
   METHOD if_oo_adt_classrun~main.
     CONSTANTS lc_catalog_name      TYPE cl_apj_dt_create_content=>ty_catalog_name      VALUE 'ZTEST_MY_SIMPLE_JOB'.
+*    CONSTANTS lc_catalog_name      TYPE cl_apj_dt_create_content=>ty_catalog_name      VALUE 'ZTEST_MY_SIMPLE_JOB'.
     CONSTANTS lc_catalog_text      TYPE cl_apj_dt_create_content=>ty_text              VALUE 'My first simple application job'.
     CONSTANTS lc_class_name        TYPE cl_apj_dt_create_content=>ty_class_name        VALUE 'ZCL_APJEO_EXECUTE'.
 
     CONSTANTS lc_template_name     TYPE cl_apj_dt_create_content=>ty_template_name     VALUE 'ZTEST_MY_SIMPLE_JOB_TEMPL'.
     CONSTANTS lc_template_text     TYPE cl_apj_dt_create_content=>ty_text              VALUE 'My first simple job template'.
 
-    CONSTANTS lc_transport_request TYPE cl_apj_dt_create_content=>ty_transport_request VALUE ''.
+    CONSTANTS lc_transport_request TYPE cl_apj_dt_create_content=>ty_transport_request VALUE 'L4XK900614'.
+*    CONSTANTS lc_transport_request TYPE cl_apj_dt_create_content=>ty_transport_request VALUE ''.
+*    CONSTANTS lc_package           TYPE cl_apj_dt_create_content=>ty_package           VALUE 'ZTRAINING_009'.
     CONSTANTS lc_package           TYPE cl_apj_dt_create_content=>ty_package           VALUE '$APJEXECOBJECT'.
 
     " Create job template (corresponds to the former system selection variant) which is mandatory
@@ -27,6 +30,23 @@ CLASS zcl_apjeo_dt_create_content IMPLEMENTATION.
     DATA lt_parameters TYPE if_apj_dt_exec_object=>tt_templ_val.
 
     DATA(lo_dt) = cl_apj_dt_create_content=>get_instance( ).
+
+    " Delete the template before the catalog entry, otherwise error "job catalog cannot be deleted, because it is used by a template"
+    TRY.
+        IF lo_dt->exists_job_template_entry( lc_template_name ) = 'Y'.
+          lo_dt->delete_job_template_entry( iv_template_name     = lc_template_name
+                                            iv_transport_request = lc_transport_request ).
+          out->write( |Job template { lc_template_name } deleted successfully| ).
+        ENDIF.
+        " Delete the catalog entry
+        IF lo_dt->exists_job_cat_entry( lc_catalog_name ) = 'Y'.
+          lo_dt->delete_job_cat_entry( iv_catalog_name      = lc_catalog_name
+                                       iv_transport_request = lc_transport_request ).
+          out->write( |Job catalog entry { lc_catalog_name } deleted successfully| ).
+        ENDIF.
+      CATCH cx_apj_dt_content INTO DATA(lx_apj_dt_content).
+        out->write( |Creation of job catalog entry { lc_catalog_name } failed: { lx_apj_dt_content->get_text( ) }| ).
+    ENDTRY.
 
     " Create job catalog entry (corresponds to the former report incl. selection parameters)
     " Provided implementation class iv_class_name shall implement two interfaces:
@@ -43,13 +63,14 @@ CLASS zcl_apjeo_dt_create_content IMPLEMENTATION.
                                      iv_catalog_entry_type = cl_apj_dt_create_content=>class_based
                                      iv_transport_request  = lc_transport_request
                                      iv_package            = lc_package ).
-        out->write( |Job catalog { lc_catalog_name } entry created successfully| ).
+        out->write( |Job catalog entry { lc_catalog_name } created successfully| ).
 
-      CATCH cx_apj_dt_content INTO DATA(lx_apj_dt_content).
+      CATCH cx_apj_dt_content INTO lx_apj_dt_content.
         out->write( |Creation of job catalog entry { lc_catalog_name } failed: { lx_apj_dt_content->get_text( ) }| ).
     ENDTRY.
 
     NEW zcl_apjeo_execute( )->if_apj_dt_exec_object~get_parameters( IMPORTING et_parameter_val = lt_parameters ).
+    lt_parameters[ selname = 'S_ID' ]-low = '1400'.
 
     TRY.
         lo_dt->create_job_template_entry( iv_template_name     = lc_template_name

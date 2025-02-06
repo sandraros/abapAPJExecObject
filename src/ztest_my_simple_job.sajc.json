@@ -1,0 +1,15 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "My first simple application job",
+    "originalLanguage": "en"
+  },
+  "generalInformation": {
+    "className": "ZCL_APJEO_EXECUTE"
+  },
+  "exitClasses": {
+    "check": "ZCL_APJEO_CHECK",
+    "valueHelp": "ZCL_APJEO_VALUE_HELP",
+    "notification": "ZCL_APJEO_NOTIFICATION"
+  }
+}
